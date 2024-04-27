@@ -37,11 +37,14 @@ class _ASMRAppState extends State<ASMRApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('ASMR Sounds')),
       body: Column(
         children: <Widget>[
           // Sound Player
-          Image.asset(images[selectedSoundIndex]),
+          Container(
+            height: 200, // Adjust this value to control the height of the image
+            width: 200, // Adjust this value to control the width of the image
+            child: Image.asset(images[selectedSoundIndex]),
+          ),
           IconButton(
             icon: Icon(Icons.play_arrow),
             onPressed: () async {
@@ -58,21 +61,28 @@ class _ASMRAppState extends State<ASMRApp> {
           ),
 
           // Selection Panel
-          GridView.builder(
-            shrinkWrap: true,
-            itemCount: sounds.length,
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedSoundIndex = index;
-                  });
-                },
-                child: Image.asset(images[index]),
-              );
-            },
+          Container(
+            height:
+                300, // Adjust this value to control the height of the selection panel
+            child: GridView.builder(
+              shrinkWrap: true,
+              itemCount: sounds.length,
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedSoundIndex = index;
+                    });
+                  },
+                  child: AspectRatio(
+                    aspectRatio: 0.8, // Control the aspect ratio of your images
+                    child: Image.asset(images[index]),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
