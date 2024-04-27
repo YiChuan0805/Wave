@@ -1,4 +1,3 @@
-import 'package:anxietynomore/buttons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
 
@@ -9,62 +8,73 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Anxiety No More',
       theme: ThemeData(
-        // primarySwatch: Colors.blue,
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 58, 183, 87)),
         useMaterial3: true,
         scaffoldBackgroundColor: const Color.fromARGB(255, 38, 38, 38),
         canvasColor: Colors.black38,
       ),
-      home: const MyHomePage(),
+      home: const Page3(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 2;
-  final List<Widget> _children = [
-    const PlaceholderWidget(Colors.deepOrange),
-    const Page2(),
-    const Page3(),
-    const PlaceholderWidget(Colors.green),
-    const PlaceholderWidget(Colors.purple)
-  ];
+  int _selectedIndex = 2;
 
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+  static const List<Widget> _pages = <Widget>[
+    Text('A random AWESOME idea:'),
+    Icon(
+      Icons.touch_app,
+      size: 150,
+    ),
+    Icon(
+      Icons.circle,
+      size: 150,
+    ),
+    Icon(
+      Icons.chat,
+      size: 150,
+    ),
+    Icon(
+      Icons.palette,
+      size: 150,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Anxiety No More'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
       ),
-      body: _children[_currentIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black38,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
-        items: const [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.headphones),
             label: 'Sounds',
@@ -86,20 +96,15 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Drawing',
           ),
         ],
-      ),
+        currentIndex: _selectedIndex, //New
+        onTap: _onItemTapped,
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
 
-class PlaceholderWidget extends StatelessWidget {
-  final Color color;
-
-  const PlaceholderWidget(this.color, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: color,
-    );
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
