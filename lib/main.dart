@@ -1,6 +1,7 @@
 import 'package:anxietynomore/buttons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
+import 'package:anxietynomore/asmr_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 2;
   final List<Widget> _children = [
-    const PlaceholderWidget(Colors.deepOrange),
+    ASMRApp(),
     const Page2(),
     const Page3(),
     const PlaceholderWidget(Colors.green),
