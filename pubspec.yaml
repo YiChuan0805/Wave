@@ -47,6 +47,7 @@ dependencies:
   image_gallery_saver: ^2.0.3
   audioplayers: ^6.0.0
   assets_audio_player: ^3.0.3+3
+  chat_bubbles: ^1.6.0
 
 dev_dependencies:
   flutter_test:
