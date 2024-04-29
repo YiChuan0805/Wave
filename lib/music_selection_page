@@ -1,0 +1,62 @@
+class MusicSelectPage extends StatelessWidget {
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Music Selection'),
+      ),
+      body: PlaceholderWidget(Colors.green),// Your music selection page content here,
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black38,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.headphones),
+            label: 'Sounds',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.touch_app),
+            label: 'Fidgets',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.circle),
+            label: 'Breathe',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Tree Hole',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.palette),
+            label: 'Drawing',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+  final Color color;
+
+  const PlaceholderWidget(this.color, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+    );
+  }
+}

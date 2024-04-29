@@ -1,8 +1,10 @@
 import 'package:anxietynomore/buttons_page.dart';
+import 'package:anxietynomore/contacts_page';
 import 'package:anxietynomore/treehole_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
 import 'package:anxietynomore/asmr_page.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +58,26 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Anxiety No More'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.contacts), // choose an appropriate icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ContactsPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.music_note), // choose an appropriate icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PlaceholderWidget(Colors.purple)),
+              );
+            },
+          ),
+        ],
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -105,3 +127,4 @@ class PlaceholderWidget extends StatelessWidget {
     );
   }
 }
+
