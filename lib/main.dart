@@ -1,5 +1,6 @@
 import 'package:anxietynomore/buttons_page.dart';
-import 'package:anxietynomore/contacts_page';
+import 'package:anxietynomore/contacts_page.dart';
+import 'package:anxietynomore/drawing_page.dart';
 import 'package:anxietynomore/treehole_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
@@ -45,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const Page2(),
     const Page3(),
     TreeHolePage(),
-    const PlaceholderWidget(Colors.purple)
+    DrawingPage()
   ];
 
   void onTabTapped(int index) {
