@@ -4,6 +4,7 @@ import 'package:anxietynomore/treehole_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
 import 'package:anxietynomore/asmr_page.dart';
+import 'package:anxietynomore/music_page.dart';
 
 
 void main() {
@@ -73,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const PlaceholderWidget(Colors.purple)),
+                MaterialPageRoute(builder: (context) => MusicPage()),
               );
             },
           ),
