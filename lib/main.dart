@@ -1,6 +1,7 @@
 import 'package:anxietynomore/buttons_page.dart';
 import 'package:anxietynomore/contacts_page.dart';
 import 'package:anxietynomore/drawing_page.dart';
+import 'package:anxietynomore/fidget_button.dart';
 import 'package:anxietynomore/treehole_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxietynomore/circle_page.dart';
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 2;
   final List<Widget> _children = [
     ASMRApp(),
-    const Page2(),
+    FidgetPage(),
     const Page3(),
     TreeHolePage(),
     DrawingPage()

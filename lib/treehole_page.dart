@@ -18,7 +18,7 @@ class _TreeHolePageState extends State<TreeHolePage>
   var messageBubble = _MessageBubbleAnimation(
     message: text,
     controller: AnimationController(
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 4),
       vsync: this,
     )..forward(),
   );
@@ -26,7 +26,7 @@ class _TreeHolePageState extends State<TreeHolePage>
     _messages.insert(0, messageBubble);
   });
   // Remove the message after a delay
-  Future.delayed(Duration(seconds: 10), () {
+  Future.delayed(Duration(seconds: 5), () {
     if (mounted) {
       setState(() {
         _messages.remove(messageBubble);
@@ -112,7 +112,7 @@ class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
 
     _offsetAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: const Offset(0.0, -1.0),
+      end: const Offset(0.0, -15.0),
     ).animate(CurvedAnimation(
       parent: widget.controller,
       curve: Curves.easeIn,
@@ -131,7 +131,7 @@ class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
     ));
 
     // Delay the start of the animation by 3 seconds
-    Future.delayed(Duration(seconds: 10), () {
+    Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
         widget.controller.forward();
       }
