@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 class ASMRApp extends StatefulWidget {
+  const ASMRApp({super.key});
+
   @override
   _ASMRAppState createState() => _ASMRAppState();
 }
@@ -12,26 +14,26 @@ class _ASMRAppState extends State<ASMRApp> {
 
   // Replace these with your own sounds and images
   List<String> sounds = [
-    'sounds/S0.mp3',
-    'sounds/S1.mp3',
-    'sounds/S2.mp3',
-    'sounds/S3.mp3',
-    'sounds/S4.mp3',
-    'sounds/S5.mp3',
-    'sounds/S6.mp3',
-    'sounds/S7.mp3',
-    'sounds/S8.mp3'
+    'assets/asmr/rec/rec1.mp3',
+    'assets/asmr/rec/rec2.mp3',
+    'assets/asmr/rec/rec3.mp3',
+    'assets/asmr/rec/rec4.mp3',
+    'assets/asmr/rec/rec5.mp3',
+    'assets/asmr/rec/rec6.mp3',
+    'assets/asmr/rec/rec7.mp3',
+    'assets/asmr/rec/rec8.mp3',
+    'assets/asmr/rec/rec9.mp3'
   ];
   List<String> images = [
-    'S0.jpg',
-    'S1.jpg',
-    'S2.jpg',
-    'S3.jpg',
-    'S4.jpg',
-    'S5.jpg',
-    'S6.jpg',
-    'S7.jpg',
-    'S8.jpg'
+    'assets/asmr/pic/sound1.png',
+    'assets/asmr/pic/sound2.png',
+    'assets/asmr/pic/sound3.png',
+    'assets/asmr/pic/sound4.png',
+    'assets/asmr/pic/sound5.png',
+    'assets/asmr/pic/sound6.png',
+    'assets/asmr/pic/sound7.png',
+    'assets/asmr/pic/sound8.png',
+    'assets/asmr/pic/sound9.png'
   ];
 
   @override
@@ -40,13 +42,13 @@ class _ASMRAppState extends State<ASMRApp> {
       body: Column(
         children: <Widget>[
           // Sound Player
-          Container(
+          SizedBox(
             height: 200, // Adjust this value to control the height of the image
             width: 200, // Adjust this value to control the width of the image
             child: Image.asset(images[selectedSoundIndex]),
           ),
           IconButton(
-            icon: Icon(Icons.play_arrow),
+            icon: const Icon(Icons.play_arrow),
             onPressed: () async {
               _assetsAudioPlayer.open(
                 Audio(sounds[selectedSoundIndex]),
@@ -54,21 +56,21 @@ class _ASMRAppState extends State<ASMRApp> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.pause),
+            icon: const Icon(Icons.pause),
             onPressed: () async {
               _assetsAudioPlayer.pause();
             },
           ),
 
           // Selection Panel
-          Container(
+          SizedBox(
             height:
                 300, // Adjust this value to control the height of the selection panel
             child: GridView.builder(
               shrinkWrap: true,
               itemCount: sounds.length,
               gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class FidgetPage extends StatelessWidget {
+  const FidgetPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fidget Page'),
+        title: const Text('Fidget Page'),
       ),
       body: GridView.count(
         crossAxisCount: 3,
@@ -21,7 +23,7 @@ class FidgetPage extends StatelessWidget {
 class FidgetButton extends StatefulWidget {
   final String videoPath;
 
-  FidgetButton({required this.videoPath});
+  const FidgetButton({super.key, required this.videoPath});
 
   @override
   _FidgetButtonState createState() => _FidgetButtonState();

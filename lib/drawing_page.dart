@@ -1,21 +1,18 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:anxietynomore/drawn_line.dart';
 import 'package:anxietynomore/sketcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class DrawingPage extends StatefulWidget {
+  const DrawingPage({super.key});
+
   @override
   _DrawingPageState createState() => _DrawingPageState();
 }
 
 class _DrawingPageState extends State<DrawingPage> {
-  GlobalKey _globalKey = new GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
   List<DrawnLine> lines = <DrawnLine>[];
   DrawnLine? line;
   Color selectedColor = Colors.black;
@@ -77,7 +74,7 @@ class _DrawingPageState extends State<DrawingPage> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(4.0),
           color: Colors.transparent,
           alignment: Alignment.topLeft,
           child: StreamBuilder<DrawnLine?>(
@@ -102,7 +99,7 @@ class _DrawingPageState extends State<DrawingPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.transparent,
-        padding: EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         alignment: Alignment.topLeft,
         child: StreamBuilder<List<DrawnLine>>(
           stream: linesStreamController.stream,
@@ -183,11 +180,11 @@ class _DrawingPageState extends State<DrawingPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           buildClearButton(),
-          Divider(
+          const Divider(
             height: 10.0,
           ),
           // buildSaveButton(),
-          Divider(
+          const Divider(
             height: 20.0,
           ),
           buildColorButton(Colors.red),
@@ -234,7 +231,7 @@ class _DrawingPageState extends State<DrawingPage> {
   Widget buildClearButton() {
     return GestureDetector(
       onTap: clear,
-      child: CircleAvatar(
+      child: const CircleAvatar(
         child: Icon(
           Icons.create,
           size: 20.0,

@@ -1,4 +1,3 @@
-import 'package:anxietynomore/buttons_page.dart';
 import 'package:anxietynomore/contacts_page.dart';
 import 'package:anxietynomore/drawing_page.dart';
 import 'package:anxietynomore/fidget_button.dart';
@@ -43,11 +42,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 2;
   final List<Widget> _children = [
-    ASMRApp(),
-    FidgetPage(),
+    const ASMRApp(),
+    const FidgetPage(),
     const Page3(),
-    TreeHolePage(),
-    DrawingPage()
+    const TreeHolePage(),
+    const DrawingPage()
   ];
 
   void onTabTapped(int index) {
@@ -76,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MusicPage()),
+                MaterialPageRoute(builder: (context) => const MusicPage()),
               );
             },
           ),

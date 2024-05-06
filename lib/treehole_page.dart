@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart'; // import the package
 
 class TreeHolePage extends StatefulWidget {
+  const TreeHolePage({super.key});
+
   @override
   _TreeHolePageState createState() => _TreeHolePageState();
 }
@@ -18,7 +20,7 @@ class _TreeHolePageState extends State<TreeHolePage>
   var messageBubble = _MessageBubbleAnimation(
     message: text,
     controller: AnimationController(
-      duration: Duration(seconds: 4),
+      duration: const Duration(seconds: 4),
       vsync: this,
     )..forward(),
   );
@@ -26,7 +28,7 @@ class _TreeHolePageState extends State<TreeHolePage>
     _messages.insert(0, messageBubble);
   });
   // Remove the message after a delay
-  Future.delayed(Duration(seconds: 5), () {
+  Future.delayed(const Duration(seconds: 5), () {
     if (mounted) {
       setState(() {
         _messages.remove(messageBubble);
@@ -43,13 +45,13 @@ class _TreeHolePageState extends State<TreeHolePage>
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               reverse: true,
               itemBuilder: (_, int index) => _messages[index],
               itemCount: _messages.length,
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
           Container(
             decoration: BoxDecoration(color: Theme.of(context).cardColor),
             child: _buildTextComposer(),
@@ -63,21 +65,21 @@ class _TreeHolePageState extends State<TreeHolePage>
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
             Flexible(
               child: TextField(
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
-                decoration: InputDecoration.collapsed(
+                decoration: const InputDecoration.collapsed(
                     hintText: "Send a message to the tree"),
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed: () => _handleSubmitted(_textController.text),
               ),
             ),
@@ -92,7 +94,7 @@ class _MessageBubbleAnimation extends StatefulWidget {
   final String message;
   final AnimationController controller;
 
-  _MessageBubbleAnimation({
+  const _MessageBubbleAnimation({
     required this.message,
     required this.controller,
   });
@@ -123,7 +125,7 @@ class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
       end: 0.0,
     ).animate(CurvedAnimation(
       parent: widget.controller,
-      curve: Interval(
+      curve: const Interval(
         0.7,  // Start fading out at 70% of the animation
         1.0,  // Completely faded out at 100% of the animation
         curve: Curves.easeOut,
@@ -131,7 +133,7 @@ class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
     ));
 
     // Delay the start of the animation by 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         widget.controller.forward();
       }
@@ -148,7 +150,7 @@ class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
           text: widget.message,
           color: Colors.green,
           isSender: true,
-          textStyle: TextStyle(color: Colors.white),
+          textStyle: const TextStyle(color: Colors.white),
         ),
       ),
     );

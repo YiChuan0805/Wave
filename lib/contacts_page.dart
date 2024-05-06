@@ -11,33 +11,23 @@ class Contact {
 
 class ContactsPage extends StatelessWidget {
   final List<Contact> contacts = [
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'moon.png'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'sun.png'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'yy.png'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S0.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S1.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S2.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S3.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S4.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S5.jpg'),
-    Contact(name: 'Yeet', number: '1234567890', description: 'Friend', imageUrl: 'S6.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S7.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'S8.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg'),
-    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/images/john_doe.jpg')
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor1.png'),
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor2.png'),
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor3.png'),
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor4.png'),
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor5.png'),
+    Contact(name: 'John Doe', number: '1234567890', description: 'Friend', imageUrl: 'assets/counselor/counsellor6.png'),
     
     // Add more contacts here
   ];
+
+  ContactsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
+        title: const Text('Contacts'),
       ),
       body: ListView.builder(
         itemCount: contacts.length,
@@ -52,7 +42,7 @@ class ContactsPage extends StatelessWidget {
 class ContactCard extends StatelessWidget {
   final Contact contact;
 
-  ContactCard({required this.contact});
+  const ContactCard({super.key, required this.contact});
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +55,8 @@ class ContactCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('${contact.number}'),
-            Text('${contact.description}'),
+            Text(contact.number),
+            Text(contact.description),
           ],
         ),
       ),

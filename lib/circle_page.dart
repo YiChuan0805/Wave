@@ -10,7 +10,7 @@ class Page3 extends StatefulWidget {
 class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
-  String currentImage = 'moon.png'; // initial image
+  String currentImage = 'assets/breathe/moon.png'; // initial image
 
   @override
   void initState() {
@@ -44,10 +44,10 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                   ),
                   onPressed: () {
                     setState(() {
-                      currentImage = 'moon.png';
+                      currentImage = 'assets/breathe/moon.png';
                     });
                   },
-                  child: Image.asset('moon.png', height: 50,),
+                  child: Image.asset('assets/breathe/moon.png', height: 50,),
                 ),
               ),
               Padding(
@@ -58,10 +58,10 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                   ),
                   onPressed: () {
                     setState(() {
-                      currentImage = 'moon.png';
+                      currentImage = 'assets/breathe/moon.png';
                     });
                   },
-                  child: Image.asset('moon.png', height: 50,),
+                  child: Image.asset('assets/breathe/moon.png', height: 50,),
                 ),
               ),
               Padding(
@@ -72,10 +72,10 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                   ),
                   onPressed: () {
                     setState(() {
-                      currentImage = 'sun.png';
+                      currentImage = 'assets/breathe/sun.png';
                     });
                   },
-                  child: Image.asset('sun.png', height: 50,),
+                  child: Image.asset('assets/breathe/sun.png', height: 50,),
                 ),
               ),
               Padding(
@@ -86,10 +86,10 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                   ),
                   onPressed: () {
                     setState(() {
-                      currentImage = 'yy.png';
+                      currentImage = 'assets/breathe/yy.png';
                     });
                   },
-                  child: Image.asset('yy.png', height: 50,),
+                  child: Image.asset('assets/breathe/yy.png', height: 50,),
                 ),
               ),
             ],
