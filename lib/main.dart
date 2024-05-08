@@ -8,6 +8,7 @@ import 'package:anxietynomore/asmr_page.dart';
 import 'package:anxietynomore/music_page.dart';
 
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 2;
   final List<Widget> _children = [
     const ASMRApp(),
-    const FidgetPage(),
+    FidgetPage(),
     const Page3(),
     const TreeHolePage(),
     const DrawingPage()

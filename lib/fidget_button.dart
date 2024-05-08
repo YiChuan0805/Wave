@@ -1,69 +1,174 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
-class FidgetPage extends StatelessWidget {
-  const FidgetPage({super.key});
-
+class FidgetPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fidget Page'),
-      ),
-      body: GridView.count(
-        crossAxisCount: 3,
-        children: List.generate(9, (index) {
-          return FidgetButton(videoPath: 'assets/videos/fidget${index + 1}.mp4');
-        }),
-      ),
-    );
-  }
+  _FidgetPageState createState() => _FidgetPageState();
 }
 
-class FidgetButton extends StatefulWidget {
-  final String videoPath;
-
-  const FidgetButton({super.key, required this.videoPath});
-
-  @override
-  _FidgetButtonState createState() => _FidgetButtonState();
-}
-
-class _FidgetButtonState extends State<FidgetButton> {
-  late VideoPlayerController _controller;
-  bool _isToggled = false;
+class _FidgetPageState extends State<FidgetPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  bool isToggleOn = false;
+  bool isSpacebarPressed = false;
+  bool isLampOn = false;
+  bool isPenClicked = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(widget.videoPath)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap,
-      child: VideoPlayer(_controller),
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
     );
   }
 
-  void _handleTap() {
+  void _toggleToggle() {
     setState(() {
-      _isToggled = !_isToggled;
-      if (_isToggled) {
-        _controller.play();
+      isToggleOn = !isToggleOn;
+    });
+  }
+
+  void _toggleSpacebar() {
+    setState(() {
+      isSpacebarPressed = true;
+    });
+
+    Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        isSpacebarPressed = false;
+      });
+    });
+  }
+
+  void _toggleLamp() {
+    setState(() {
+      isLampOn = !isLampOn;
+    });
+  }
+
+  void _togglePenClick() {
+    setState(() {
+      isPenClicked = !isPenClicked;
+      if (isPenClicked) {
+        _controller.forward();
       } else {
-        _controller.play();
+        _controller.reverse();
       }
     });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Fidget App')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Toggle Button
+            Switch(
+              value: isToggleOn,
+              onChanged: (newValue) {
+                _toggleToggle();
+              },
+            ),
+            SizedBox(height: 20),
+            // Custom Spacebar Key
+            GestureDetector(
+              onTap: _toggleSpacebar,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                width: isSpacebarPressed ? 80 : 100,
+                height: isSpacebarPressed ? 40 : 50,
+                decoration: BoxDecoration(
+                  color: isSpacebarPressed ? Colors.blue : Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'SPACE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Lamp
+            GestureDetector(
+              onTap: _toggleLamp,
+              child: Container(
+                width: 100,
+                height: 150,
+                decoration: BoxDecoration(
+                  color: isLampOn ? Colors.yellow[200] : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    isLampOn ? Icons.lightbulb : Icons.lightbulb_outline,
+                    size: 48,
+                    color: isLampOn ? Colors.yellow[800] : Colors.grey[600],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Clicking Pen
+            GestureDetector(
+              onTap: _togglePenClick,
+              child: Container(
+                width: 100,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: RotationTransition(
+                    turns: Tween(begin: 0.0, end: 0.5).animate(_controller),
+                    child: Icon(
+                      Icons.edit,
+                      size: 48,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

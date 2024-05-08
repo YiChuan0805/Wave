@@ -50,6 +50,9 @@ dependencies:
   chat_bubbles: ^1.6.0
   flutter_drawing_board: ^0.7.0+2
   video_player: ^2.8.6
+  getwidget: ^4.0.0
+  animated_text_kit: ^4.2.2
+
 
 dev_dependencies:
   flutter_test:
@@ -75,11 +78,28 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/counselor/
-    - assets/asmr/pic/
-    - assets/asmr/rec/
-    - assets/music/thumbnail/
-    - assets/music/audio/
+    - assets/counselor/counsellor1.png
+    - assets/counselor/counsellor2.png
+    - assets/counselor/counsellor3.png
+    - assets/counselor/counsellor4.png
+    - assets/counselor/counsellor5.png
+    - assets/counselor/counsellor6.png
+    - assets/music/thumbnail/ms1.png
+    - assets/music/thumbnail/ms2.png
+    - assets/music/thumbnail/ms3.png
+    - assets/music/thumbnail/ms4.png
+    - assets/music/thumbnail/ms5.png
+    - assets/music/thumbnail/ms6.png
+    - assets/music/thumbnail/ms7.png
+    - assets/music/thumbnail/ms8.png
+    - assets/music/thumbnail/ms9.png
+    - assets/music/audio/Music1.mp3
+    - assets/music/audio/Music2.mp3
+    - assets/music/audio/Music3.mp3
+    - assets/music/audio/Music4.mp3
+    - assets/music/audio/Music5.mp3
+    - assets/music/audio/Music6.mp3
+    - assets/music/audio/Music7.mp3
     - assets/sounds/
     - assets/breathe/moon.png
     - assets/breathe/sun.png
@@ -91,6 +111,18 @@ flutter:
     - assets/asmr/pic/sound5.png
     - assets/asmr/pic/sound6.png
     - assets/asmr/pic/sound7.png
+    - assets/asmr/pic/sound8.png
+    - assets/asmr/pic/sound9.png
+    - assets/asmr/rec/rec1.mp3
+    - assets/asmr/rec/rec2.mp3
+    - assets/asmr/rec/rec3.mp3
+    - assets/asmr/rec/rec4.mp3
+    - assets/asmr/rec/rec5.mp3
+    - assets/asmr/rec/rec6.mp3
+    - assets/asmr/rec/rec7.mp3
+    - assets/asmr/rec/rec8.mp3
+    - assets/asmr/rec/rec9.mp3
+    - assets/gifs/fidget1.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
