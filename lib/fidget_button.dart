@@ -1,5 +1,7 @@
+import 'package:anxietynomore/counter_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:anxietynomore/pop_fidget_toy.dart';
+import 'package:anxietynomore/flash_card_grid.dart';
 
 class FidgetPage extends StatefulWidget {
   @override
@@ -64,13 +66,23 @@ class _FidgetPageState extends State<FidgetPage>
     super.dispose();
   }
 
+  void _navigateToPage(Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Fidget App')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: GridView.count(
+          crossAxisCount: 2, // Number of columns
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          padding: EdgeInsets.all(16),
           children: [
             // Toggle Button
             Switch(
@@ -79,7 +91,6 @@ class _FidgetPageState extends State<FidgetPage>
                 _toggleToggle();
               },
             ),
-            SizedBox(height: 20),
             // Custom Spacebar Key
             GestureDetector(
               onTap: _toggleSpacebar,
@@ -109,7 +120,6 @@ class _FidgetPageState extends State<FidgetPage>
                 ),
               ),
             ),
-            SizedBox(height: 20),
             // Lamp
             GestureDetector(
               onTap: _toggleLamp,
@@ -136,7 +146,6 @@ class _FidgetPageState extends State<FidgetPage>
                 ),
               ),
             ),
-            SizedBox(height: 20),
             // Clicking Pen
             GestureDetector(
               onTap: _togglePenClick,
@@ -165,6 +174,18 @@ class _FidgetPageState extends State<FidgetPage>
                   ),
                 ),
               ),
+            ),
+            ElevatedButton(
+              onPressed: () => _navigateToPage(PopFidgetToy()),
+              child: Text('Page 1'),
+            ),
+            ElevatedButton(
+              onPressed: () => _navigateToPage(CounterScreen()),
+              child: Text('Page 2'),
+            ),
+            ElevatedButton(
+              onPressed: () => _navigateToPage(FlashCardPage()),
+              child: Text('Page 3'),
             ),
           ],
         ),

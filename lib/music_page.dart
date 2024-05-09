@@ -41,29 +41,35 @@ class _MusicPageState extends State<MusicPage> {
       body: ListView.builder(
         itemCount: songs.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: Image.asset(songs[index].imageUrl),
-            title: Text(songs[index].title),
-            trailing: StreamBuilder(
-              stream: _assetsAudioPlayer.realtimePlayingInfos,
-              builder: (context, AsyncSnapshot<RealtimePlayingInfos?> snapshot) {
-                return IconButton(
-                  icon: Icon(currentSong == songs[index].audioUrl && snapshot.hasData && snapshot.data!.isPlaying ? Icons.pause : Icons.play_arrow),
-                  onPressed: () {
-                    if (currentSong == songs[index].audioUrl && snapshot.hasData && snapshot.data!.isPlaying) {
-                      _assetsAudioPlayer.pause();
-                    } else {
-                      _assetsAudioPlayer.open(
-                        Audio(songs[index].audioUrl),
-                        autoStart: true,
-                        showNotification: true,
-                      );
-                      currentSong = songs[index].audioUrl;
-                    }
-                    setState(() {});
-                  },
-                );
-              },
+          return Card( // Wrap ListTile with Card
+            elevation: 4, // Add elevation for a subtle shadow effect
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12), // Rounded rectangle shape
+            ),
+            child: ListTile(
+              leading: Image.asset(songs[index].imageUrl),
+              title: Text(songs[index].title),
+              trailing: StreamBuilder(
+                stream: _assetsAudioPlayer.realtimePlayingInfos,
+                builder: (context, AsyncSnapshot<RealtimePlayingInfos?> snapshot) {
+                  return IconButton(
+                    icon: Icon(currentSong == songs[index].audioUrl && snapshot.hasData && snapshot.data!.isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () {
+                      if (currentSong == songs[index].audioUrl && snapshot.hasData && snapshot.data!.isPlaying) {
+                        _assetsAudioPlayer.pause();
+                      } else {
+                        _assetsAudioPlayer.open(
+                          Audio(songs[index].audioUrl),
+                          autoStart: true,
+                          showNotification: true,
+                        );
+                        currentSong = songs[index].audioUrl;
+                      }
+                      setState(() {});
+                    },
+                  );
+                },
+              ),
             ),
           );
         },
