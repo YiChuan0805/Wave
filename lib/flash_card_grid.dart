@@ -1,77 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
-import 'package:anxietynomore/contacts_page.dart';
-import 'package:anxietynomore/music_page.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class FlashCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Anxiety No More'),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.contacts), // choose an appropriate icon
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ContactsPage()),
-                );
-              },
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      backgroundColor: Color.fromARGB(95, 70, 70, 70),
+      appBar: AppBar(
+        title: Text(
+          'Flash Card',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(95, 37, 37, 37),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(0.5),
+          child: Container(
+            height: 1.0,
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Tap for more surprises',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Inter',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.music_note), // choose an appropriate icon
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MusicPage()),
-                );
-              },
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomFlipCard(
+                    frontText: 'Every day is a new chance to rewrite your story.',
+                    backText: 'You are not responsible for the versions of you that exist in other people’s minds.',
+                    frontColor: Colors.red,
+                    backColor: Colors.orange,
+                    cardWidth: screenWidth * 0.4,
+                    cardHeight: screenHeight * 0.3,
+                  ),
+                  CustomFlipCard(
+                    frontText: 'You are capable, strong and moving forward with courage.',
+                    backText: 'Saying how you feel will never ruin a real connection.',
+                    frontColor: const Color.fromARGB(255, 202, 182, 0),
+                    backColor: Colors.green,
+                    cardWidth: screenWidth * 0.4,
+                    cardHeight: screenHeight * 0.3,
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomFlipCard(
+                    frontText: 'Your potential is limitless; do not underestimate the power within you.',
+                    backText: 'Strive for progress, not perfection. Each step forward is a victory in itself.',
+                    frontColor: Colors.blue,
+                    backColor: Colors.indigo,
+                    cardWidth: screenWidth * 0.4,
+                    cardHeight: screenHeight * 0.3,
+                  ),
+                  CustomFlipCard(
+                    frontText: 'Believe that you deserve better; you really do.',
+                    backText: 'You don’t have to rebuild a relationship with everyone you have forgiven.',
+                    frontColor: Color.fromARGB(255, 95, 0, 139),
+                    backColor: Color.fromARGB(255, 84, 9, 114),
+                    cardWidth: screenWidth * 0.4,
+                    cardHeight: screenHeight * 0.3,
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomFlipCard(
-                    frontText: 'Front Card 1',
-                    backText: 'Back Card 1',
-                    frontColor: Colors.orange,
-                    backColor: Colors.blue,
-                  ),
-                  CustomFlipCard(
-                    frontText: 'Front Card 2',
-                    backText: 'Back Card 2',
-                    frontColor: Colors.green,
-                    backColor: Colors.purple,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomFlipCard(
-                    frontText: 'Front Card 3',
-                    backText: 'Back Card 3',
-                    frontColor: Colors.teal,
-                    backColor: Colors.indigo,
-                  ),
-                  CustomFlipCard(
-                    frontText: 'Front Card 4',
-                    backText: 'Back Card 4',
-                    frontColor: Colors.red,
-                    backColor: Colors.yellow,
-                  ),
-                ],
-              ),
-              // Add more CustomFlipCard widgets as needed
-            ],
-          ),
         ),
       ),
     );
@@ -83,12 +107,16 @@ class CustomFlipCard extends StatefulWidget {
   final String backText;
   final Color frontColor;
   final Color backColor;
+  final double cardWidth;
+  final double cardHeight;
 
   const CustomFlipCard({
     required this.frontText,
     required this.backText,
     required this.frontColor,
     required this.backColor,
+    required this.cardWidth,
+    required this.cardHeight,
   });
 
   @override
@@ -96,11 +124,13 @@ class CustomFlipCard extends StatefulWidget {
 }
 
 class _CustomFlipCardState extends State<CustomFlipCard> {
-  bool isFlipped = false;
+  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
 
   void _toggleCard() {
     setState(() {
-      isFlipped = !isFlipped;
+      _assetsAudioPlayer.open(
+        Audio("assets/effects/flip.mp3"),
+      ); // Play flipping sound
     });
   }
 
@@ -112,24 +142,33 @@ class _CustomFlipCardState extends State<CustomFlipCard> {
         direction: FlipDirection.HORIZONTAL,
         front: _buildCard(widget.frontText, widget.frontColor),
         back: _buildCard(widget.backText, widget.backColor),
+        onFlip: _toggleCard,
       ),
     );
   }
 
   Widget _buildCard(String text, Color color) {
-    return Card(
-      color: color,
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Container(
-        width: 200,
-        height: 300,
-        alignment: Alignment.center,
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 18, color: Colors.white),
+    return Transform(
+      transform: Matrix4.identity()
+        ..setEntry(3, 2, 0.001)
+        ..rotateX(-0.1),
+      alignment: Alignment.center,
+      child: Card(
+        color: color,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          width: widget.cardWidth,
+          height: widget.cardHeight,
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(16), // 添加内边距
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );

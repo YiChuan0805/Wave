@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 class ASMRApp extends StatefulWidget {
-  const ASMRApp({super.key});
+  const ASMRApp({Key? key}) : super(key: key);
 
   @override
   _ASMRAppState createState() => _ASMRAppState();
@@ -11,6 +11,8 @@ class ASMRApp extends StatefulWidget {
 class _ASMRAppState extends State<ASMRApp> {
   int selectedSoundIndex = 0;
   final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
+  bool _isPlaying = false;
+  bool _isFirstPlay = true;
 
   // Replace these with your own sounds and images
   List<String> sounds = [
@@ -42,53 +44,120 @@ class _ASMRAppState extends State<ASMRApp> {
       body: Column(
         children: <Widget>[
           // Sound Player
-          SizedBox(
-            height: 200, // Adjust this value to control the height of the image
-            width: 200, // Adjust this value to control the width of the image
-            child: Image.asset(images[selectedSoundIndex]),
-          ),
-          IconButton(
-            icon: const Icon(Icons.play_arrow),
-            onPressed: () async {
-              _assetsAudioPlayer.open(
-                Audio(sounds[selectedSoundIndex]),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.pause),
-            onPressed: () async {
-              _assetsAudioPlayer.pause();
-            },
-          ),
-
-          // Selection Panel
-          SizedBox(
-            height:
-                300, // Adjust this value to control the height of the selection panel
-            child: GridView.builder(
-              shrinkWrap: true,
-              itemCount: sounds.length,
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedSoundIndex = index;
-                    });
-                  },
-                  child: AspectRatio(
-                    aspectRatio: 0.8, // Control the aspect ratio of your images
-                    child: Image.asset(images[index]),
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(
+                children: [
+                  Image.asset(images[selectedSoundIndex]),
+                  Positioned.fill(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [],
+                    ),
                   ),
-                );
-              },
+                ],
+              ),
+            ),
+          ),
+          Divider(),
+          // Tap and Play
+          IconButton(
+            icon: _isPlaying
+                ? const Icon(
+                    Icons.pause,
+                    color: Colors.white, // Set play button color to white
+                  )
+                : const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white, // Set play button color to white
+                  ),
+            onPressed: () {
+              if (_isFirstPlay) {
+                _playSound();
+                _isFirstPlay = false;
+              } else {
+                _togglePlayPause();
+              }
+            },
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Tap and Play',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+          Divider(),
+          // Selection Panel
+          Expanded(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                shrinkWrap: true,
+                itemCount: sounds.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.0, // Control the aspect ratio of your images
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _stopSound(); // Stop the current sound
+                        selectedSoundIndex = index;
+                        _isPlaying = false;
+                        _isFirstPlay = true;
+                      });
+                    },
+                    child: AspectRatio(
+                      aspectRatio: 1.0, // Control the aspect ratio of your images
+                      child: Image.asset(images[index]),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _playSound() async {
+    setState(() {
+      _isPlaying = true;
+    });
+
+    await _assetsAudioPlayer.open(
+      Audio(sounds[selectedSoundIndex]),
+      loopMode: LoopMode.single,
+    );
+  }
+
+  void _stopSound() async {
+    await _assetsAudioPlayer.stop();
+  }
+
+  void _togglePlayPause() async {
+    if (_isPlaying) {
+      await _assetsAudioPlayer.pause();
+    } else {
+      await _assetsAudioPlayer.play();
+    }
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
   }
 
   @override

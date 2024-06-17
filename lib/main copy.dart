@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Anxiety No More',
+      title: 'Wave',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 58, 183, 87)),
         useMaterial3: true,
         scaffoldBackgroundColor: const Color.fromARGB(255, 38, 38, 38),
-        canvasColor: Colors.black38,
+        canvasColor: Color.fromARGB(255, 38, 38, 38),
       ),
       home: const Page3(),
     );
@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 2;
 
   static const List<Widget> _pages = <Widget>[
-    Text('A random AWESOME idea:'),
+    Text('Wave:'),
     Icon(
       Icons.touch_app,
       size: 150,

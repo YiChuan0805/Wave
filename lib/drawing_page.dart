@@ -1,8 +1,10 @@
-import 'dart:async';
-
-import 'package:anxietynomore/drawn_line.dart';
-import 'package:anxietynomore/sketcher.dart';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
+
+import 'drawn_line.dart';
+import 'sketcher.dart';
 
 class DrawingPage extends StatefulWidget {
   const DrawingPage({super.key});
@@ -17,49 +19,36 @@ class _DrawingPageState extends State<DrawingPage> {
   DrawnLine? line;
   Color selectedColor = Colors.black;
   double selectedWidth = 5.0;
+  bool isEraser = false;
+  bool showStrokeWidthSlider = false;
+  ui.Picture? picture;
+  ui.PictureRecorder? recorder;
+  Canvas? canvas;
 
-  StreamController<List<DrawnLine>> linesStreamController =
-      StreamController<List<DrawnLine>>.broadcast();
-  StreamController<DrawnLine?> currentLineStreamController =
-      StreamController<DrawnLine?>.broadcast();
-
-  // Future<void> save() async {
-  //   try {
-  //     RenderRepaintBoundary? boundary = _globalKey.currentContext
-  //         ?.findRenderObject() as RenderRepaintBoundary?;
-  //     ui.Image? image = await boundary?.toImage();
-  //     ByteData? byteData =
-  //         await image?.toByteData(format: ui.ImageByteFormat.png);
-  //     Uint8List pngBytes = byteData?.buffer.asUint8List() ?? Uint8List(0);
-  //     var saved = await ImageGallerySaver.saveImage(
-  //       pngBytes,
-  //       quality: 100,
-  //       name: DateTime.now().toIso8601String() + ".png",
-  //       isReturnImagePathOfIOS: true,
-  //     );
-  //     print(saved);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  Future<void> clear() async {
+  void clear() {
     setState(() {
-      lines = [];
+      lines.clear();
+      picture = null;
       line = null;
+      recorder = null;
+      canvas = null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
+
     return Scaffold(
-      backgroundColor: Colors.yellow[50],
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Stack(
         children: [
           buildAllPaths(context),
           buildCurrentPath(context),
-          // buildStrokeToolbar(),
-          buildColorToolbar(),
+          buildTopToolbar(),
+          buildColorToolbar(screenWidth, screenHeight),
         ],
       ),
     );
@@ -77,15 +66,10 @@ class _DrawingPageState extends State<DrawingPage> {
           padding: const EdgeInsets.all(4.0),
           color: Colors.transparent,
           alignment: Alignment.topLeft,
-          child: StreamBuilder<DrawnLine?>(
-            stream: currentLineStreamController.stream,
-            builder: (context, snapshot) {
-              return CustomPaint(
-                painter: Sketcher(
-                  lines: snapshot.data != null ? [snapshot.data!] : [],
-                ),
-              );
-            },
+          child: CustomPaint(
+            painter: Sketcher(
+              lines: line != null ? [line!] : [],
+            ),
           ),
         ),
       ),
@@ -101,15 +85,8 @@ class _DrawingPageState extends State<DrawingPage> {
         color: Colors.transparent,
         padding: const EdgeInsets.all(4.0),
         alignment: Alignment.topLeft,
-        child: StreamBuilder<List<DrawnLine>>(
-          stream: linesStreamController.stream,
-          builder: (context, snapshot) {
-            return CustomPaint(
-              painter: Sketcher(
-                lines: lines,
-              ),
-            );
-          },
+        child: CustomPaint(
+          painter: CachedPainter(picture),
         ),
       ),
     );
@@ -118,7 +95,8 @@ class _DrawingPageState extends State<DrawingPage> {
   void onPanStart(DragStartDetails details) {
     RenderBox? box = context.findRenderObject() as RenderBox?;
     Offset point = box?.globalToLocal(details.globalPosition) ?? Offset.zero;
-    line = DrawnLine([point], selectedColor, selectedWidth);
+    line = DrawnLine([point], isEraser ? Colors.white : selectedColor, selectedWidth);
+    HapticFeedback.lightImpact();
   }
 
   void onPanUpdate(DragUpdateDetails details) {
@@ -126,75 +104,135 @@ class _DrawingPageState extends State<DrawingPage> {
     Offset point = box?.globalToLocal(details.globalPosition) ?? Offset.zero;
 
     List<Offset> path = List.from(line?.path ?? [])..add(point);
-    line = DrawnLine(path, selectedColor, selectedWidth);
-    currentLineStreamController.add(line);
+    line = DrawnLine(path, isEraser ? Colors.white : selectedColor, selectedWidth);
+    setState(() {});
+    HapticFeedback.lightImpact();
   }
 
   void onPanEnd(DragEndDetails details) {
     lines = List.from(lines)..add(line!);
 
-    linesStreamController.add(lines);
+    recorder ??= ui.PictureRecorder();
+    canvas ??= Canvas(recorder!);
+
+    Sketcher sketcher = Sketcher(lines: lines);
+    sketcher.paint(canvas!, Size.infinite);
+
+    picture = recorder!.endRecording();
+    recorder = null;
+    canvas = null;
+
+    setState(() {
+      line = null;
+    });
+
+    HapticFeedback.lightImpact();
   }
 
-  // Widget buildStrokeToolbar() {
-  //   return Positioned(
-  //     bottom: 100.0,
-  //     right: 10.0,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       children: [
-  //         buildStrokeButton(5.0),
-  //         buildStrokeButton(10.0),
-  //         buildStrokeButton(15.0),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget buildTopToolbar() {
+    return Positioned(
+      top: 10.0,
+      left: 10.0,
+      right: 10.0,
+      child: Column(
+        children: [
+          if (showStrokeWidthSlider) buildStrokeWidthSlider(),
+        ],
+      ),
+    );
+  }
 
-  Widget buildStrokeButton(double strokeWidth) {
+  Widget buildStrokeWidthSlider() {
+    return Container(
+      width: 150.0, // 调整宽度
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center, // 中心对齐
+        children: [
+          Center(
+            child: Text(
+              'Adjust Stroke Width',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
+          Slider(
+            value: selectedWidth,
+            min: 1.0,
+            max: 20.0,
+            onChanged: (value) {
+              setState(() {
+                selectedWidth = value;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildColorToolbar(double screenWidth, double screenHeight) {
+    return Positioned(
+      top: screenHeight * 0.05, // 调整位置以向上移动
+      right: screenWidth * 0.025,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          buildStrokeButton(),
+          SizedBox(height: screenHeight * 0.01),
+          buildClearButton(),
+          SizedBox(height: screenHeight * 0.01),
+          buildEraserButton(),
+          Divider(height: screenHeight * 0.02),
+          buildColorButton(Colors.red),
+          buildColorButton(Colors.orange),
+          buildColorButton(Colors.yellow),
+          buildColorButton(Colors.green),
+          buildColorButton(Colors.blue),
+          buildColorButton(Colors.purple),
+          buildColorButton(Colors.black),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStrokeButton() {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedWidth = strokeWidth;
+          showStrokeWidthSlider = !showStrokeWidthSlider;
         });
       },
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Container(
-          width: strokeWidth * 2,
-          height: strokeWidth * 2,
-          decoration: BoxDecoration(
-              color: selectedColor, borderRadius: BorderRadius.circular(50.0)),
+      child: const CircleAvatar(
+        backgroundColor: ui.Color.fromARGB(255, 68, 160, 32),
+        child: Icon(
+          FontAwesomeIcons.paintBrush,
+          size: 20.0,
+          color: Colors.white,
         ),
       ),
     );
   }
 
-  Widget buildColorToolbar() {
-    return Positioned(
-      top: 40.0,
-      right: 10.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          buildClearButton(),
-          const Divider(
-            height: 10.0,
-          ),
-          // buildSaveButton(),
-          const Divider(
-            height: 20.0,
-          ),
-          buildColorButton(Colors.red),
-          buildColorButton(Colors.blueAccent),
-          buildColorButton(Colors.deepOrange),
-          buildColorButton(Colors.green),
-          buildColorButton(Colors.lightBlue),
-          buildColorButton(Colors.black),
-          buildColorButton(Colors.white),
-        ],
+  Widget buildEraserButton() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isEraser = !isEraser;
+        });
+      },
+      child: CircleAvatar(
+        backgroundColor: isEraser ? Colors.blue : Colors.grey,
+        child: Icon(
+          FontAwesomeIcons.eraser,
+          size: 20.0,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -209,35 +247,42 @@ class _DrawingPageState extends State<DrawingPage> {
         onPressed: () {
           setState(() {
             selectedColor = color;
+            isEraser = false;
           });
         },
       ),
     );
   }
 
-  // Widget buildSaveButton() {
-  //   return GestureDetector(
-  //     onTap: save,
-  //     child: CircleAvatar(
-  //       child: Icon(
-  //         Icons.save,
-  //         size: 20.0,
-  //         color: Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget buildClearButton() {
     return GestureDetector(
       onTap: clear,
       child: const CircleAvatar(
+        backgroundColor: Colors.red,
         child: Icon(
-          Icons.create,
-          size: 20.0,
+          Icons.delete_forever,
+          size: 30.0,
           color: Colors.white,
         ),
       ),
     );
+  }
+}
+
+class CachedPainter extends CustomPainter {
+  final ui.Picture? picture;
+
+  CachedPainter(this.picture);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (picture != null) {
+      canvas.drawPicture(picture!);
+    }
+  }
+
+  @override
+  bool shouldRepaint(CachedPainter oldDelegate) {
+    return oldDelegate.picture != picture;
   }
 }

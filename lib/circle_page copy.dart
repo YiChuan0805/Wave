@@ -39,7 +39,7 @@ class _Page3State extends State<Page3> with SingleTickerProviderStateMixin {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 21, 21, 21), // dark grey color
+                    backgroundColor: const Color.fromARGB(95, 37, 37, 37), // dark grey color
                   ),
                   onPressed: () {},
                   child: Image.asset('moon.png', height: 50,),

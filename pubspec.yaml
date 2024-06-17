@@ -40,7 +40,6 @@ dependencies:
   flutter_svg: ^2.0.10+1
   file_picker: ^8.0.2
   file_saver: ^0.2.12
-  url_launcher: ^6.2.6
   image_picker: ^1.1.0
   font_awesome_flutter: ^10.7.0
   universal_html: ^2.2.4
@@ -53,12 +52,23 @@ dependencies:
   getwidget: ^4.0.0
   animated_text_kit: ^4.2.2
   flip_card: ^0.7.0
+  confetti: ^0.7.0
+  url_launcher: ^6.0.20
+  shared_preferences: ^2.0.13
+  
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.3
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/logo_foreground.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -101,10 +111,11 @@ flutter:
     - assets/music/audio/Music5.mp3
     - assets/music/audio/Music6.mp3
     - assets/music/audio/Music7.mp3
-    - assets/sounds/
+    - assets/music/audio/Music8.mp3
     - assets/breathe/moon.png
     - assets/breathe/sun.png
     - assets/breathe/yy.png
+    - assets/breathe/purple.png
     - assets/asmr/pic/sound1.png
     - assets/asmr/pic/sound2.png
     - assets/asmr/pic/sound3.png
@@ -124,6 +135,37 @@ flutter:
     - assets/asmr/rec/rec8.mp3
     - assets/asmr/rec/rec9.mp3
     - assets/gifs/fidget1.gif
+    - assets/fidget/popper_icon.png
+    - assets/fidget/flash_icon.png
+    - assets/fidget/tap_icon.png
+    - assets/fidget/confetti_icon.png
+    - assets/effects/pop.mp3
+    - assets/effects/flip.mp3
+    - assets/effects/keyboard.mp3
+    - assets/effects/lightoff.mp3
+    - assets/effects/lighton.mp3
+    - assets/effects/switchon.mp3
+    - assets/effects/switchoff.mp3
+    - assets/effects/party.mp3
+    - assets/effects/dice.mp3
+    - assets/effects/tap.mp3
+    - assets/image/1.png
+    - assets/image/2.png
+    - assets/image/3.png
+    - assets/image/4.png
+    - assets/image/5.png
+    - assets/image/6.png
+    - assets/logo.png
+    - assets/splashscreen.png
+    - assets/counselor/Dr.FaezahNayan.png
+    - assets/counselor/Dr.MohdKhairone.png
+    - assets/counselor/Dr.NoorulAdilah.png
+    - assets/counselor/Dr.ShahrinAhmad.png
+    - assets/counselor/Dr.ZainudinOmar.png
+    - assets/sos/butterflyhug.png
+    - assets/sos/grounding.png
+    - assets/sos/desc1.png
+    - assets/sos/desc2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

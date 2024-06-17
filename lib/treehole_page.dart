@@ -1,86 +1,201 @@
-// tree_hole_page.dart
-// tree_hole_page.dart
 import 'package:flutter/material.dart';
-import 'package:chat_bubbles/chat_bubbles.dart'; // import the package
+import 'dart:async';
 
 class TreeHolePage extends StatefulWidget {
-  const TreeHolePage({super.key});
+  const TreeHolePage({Key? key}) : super(key: key);
 
   @override
   _TreeHolePageState createState() => _TreeHolePageState();
 }
 
-class _TreeHolePageState extends State<TreeHolePage>
-    with TickerProviderStateMixin {
+class _TreeHolePageState extends State<TreeHolePage> with TickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
-  final List<_MessageBubbleAnimation> _messages = [];
+  final List<_MessageBubble> _messages = [];
+  int _messageCount = 0;
+  Timer? _clearTimer;
 
   void _handleSubmitted(String text) {
-  _textController.clear();
-  var messageBubble = _MessageBubbleAnimation(
-    message: text,
-    controller: AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    )..forward(),
-  );
-  setState(() {
-    _messages.insert(0, messageBubble);
-  });
-  // Remove the message after a delay
-  Future.delayed(const Duration(seconds: 5), () {
-    if (mounted) {
-      setState(() {
-        _messages.remove(messageBubble);
-      });
-    }
-  });
-}
+    if (text.trim().isEmpty) return;
 
+    _textController.clear();
+
+    var messageBubble = _MessageBubble(
+      message: text,
+      isMe: true,
+    );
+    setState(() {
+      _messages.insert(0, messageBubble);
+      _messageCount++;
+
+      if (_messageCount >= 12) {
+        _messages.removeLast();
+        _messageCount--;
+      }
+    });
+
+    _resetTimer();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _clearTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _clearTimer = Timer(const Duration(seconds: 20), () {
+      setState(() {
+        _messages.clear();
+        _messageCount = 0;
+      });
+    });
+  }
+
+  void _resetTimer() {
+    _clearTimer?.cancel();
+    _startTimer();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Container(
+        color: Color.fromARGB(95, 37, 37, 37),
+        child: Column(
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Express your thoughts and feelings freely',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Flexible(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                reverse: true,
+                itemBuilder: (_, int index) => _messages[index],
+                itemCount: _messages.length,
+              ),
+            ),
+            const Divider(height: 1.0),
+            _buildTextComposerContainer(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextComposerContainer() {
+    return Container(
+      color: Color.fromARGB(95, 37, 37, 37),
+      child: _buildTextComposer(),
+    );
+  }
+
+  Widget _buildTextComposer() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
         children: <Widget>[
           Flexible(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              reverse: true,
-              itemBuilder: (_, int index) => _messages[index],
-              itemCount: _messages.length,
+            child: TextField(
+              controller: _textController,
+              onSubmitted: _handleSubmitted,
+              onChanged: (_) => _resetTimer(),
+              decoration: InputDecoration(
+                hintText: "Type your thought",
+                hintStyle: TextStyle(color: Color.fromARGB(179, 255, 255, 255)),
+                filled: true,
+                fillColor: const Color.fromARGB(255, 110, 110, 110),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              style: TextStyle(color: Colors.white),
             ),
           ),
-          const Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(color: Theme.of(context).cardColor),
-            child: _buildTextComposer(),
+          const SizedBox(width: 8.0),
+          GestureDetector(
+            onTap: () => _handleSubmitted(_textController.text),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.teal,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: const Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildTextComposer() {
-    return IconTheme(
-      data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
+class _MessageBubble extends StatelessWidget {
+  final String message;
+  final bool isMe;
+
+  const _MessageBubble({
+    required this.message,
+    required this.isMe,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: <Widget>[
-            Flexible(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
-                decoration: const InputDecoration.collapsed(
-                    hintText: "Send a message to the tree"),
+        margin: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        decoration: BoxDecoration(
+          color: isMe ? Colors.teal : Colors.grey[700],
+          borderRadius: isMe
+              ? const BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(0.0),
+                )
+              : const BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                  bottomLeft: Radius.circular(0.0),
+                  bottomRight: Radius.circular(20.0),
+                ),
+        ),
+        child: Column(
+          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: isMe
+                  ? const EdgeInsets.only(right: 6.0)
+                  : const EdgeInsets.only(left: 6.0),
+              child: CustomPaint(
+                painter: _MessageBubbleArrowPainter(isMe: isMe),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () => _handleSubmitted(_textController.text),
+            Text(
+              message,
+              style: TextStyle(
+                color: isMe ? Colors.white : Colors.black,
+                fontSize: 14.0,
               ),
             ),
           ],
@@ -90,69 +205,31 @@ class _TreeHolePageState extends State<TreeHolePage>
   }
 }
 
-class _MessageBubbleAnimation extends StatefulWidget {
-  final String message;
-  final AnimationController controller;
+class _MessageBubbleArrowPainter extends CustomPainter {
+  final bool isMe;
 
-  const _MessageBubbleAnimation({
-    required this.message,
-    required this.controller,
-  });
+  _MessageBubbleArrowPainter({required this.isMe});
 
   @override
-  _MessageBubbleAnimationState createState() => _MessageBubbleAnimationState();
-}
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = isMe ? Colors.teal : Colors.grey[700]!;
+    final path = Path();
 
-class _MessageBubbleAnimationState extends State<_MessageBubbleAnimation>
-    with TickerProviderStateMixin {
-  late Animation<Offset> _offsetAnimation;
-  late Animation<double> _fadeAnimation;
+    if (isMe) {
+      path.moveTo(size.width, 0);
+      path.lineTo(size.width - 6, 6);
+      path.lineTo(size.width, 12);
+      path.close();
+    } else {
+      path.moveTo(0, 0);
+      path.lineTo(6, 6);
+      path.lineTo(0, 12);
+      path.close();
+    }
 
-  @override
-  void initState() {
-    super.initState();
-
-    _offsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0.0, -15.0),
-    ).animate(CurvedAnimation(
-      parent: widget.controller,
-      curve: Curves.easeIn,
-    ));
-
-    _fadeAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: widget.controller,
-      curve: const Interval(
-        0.7,  // Start fading out at 70% of the animation
-        1.0,  // Completely faded out at 100% of the animation
-        curve: Curves.easeOut,
-      ),
-    ));
-
-    // Delay the start of the animation by 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        widget.controller.forward();
-      }
-    });
+    canvas.drawPath(path, paint);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _offsetAnimation,
-        child: BubbleSpecialOne(
-          text: widget.message,
-          color: Colors.green,
-          isSender: true,
-          textStyle: const TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
